@@ -7,7 +7,6 @@ from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Required
 import os
 from werkzeug.utils import secure_filename
-import csv
 import pandas as pd
 from openpyxl import load_workbook
 from datetime import date
