@@ -1,5 +1,6 @@
 {% extends 'bootstrap/base.html' %}
 {% import "bootstrap/wtf.html" as wtf %}
+{% include "header.html" %}
 
 {% block styles %}
   {{ super() }}
@@ -7,8 +8,6 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 {% endblock %}
-
-{% block title %}Add Person{% endblock %}
 
 {% block content %}
 
@@ -26,10 +25,7 @@
     {% endif %}
   {% endwith %}
 
-    <h1 class="heading">Add Person</h1>
+    <h1 class="heading">Agregar Persona</h1>
     {{ wtf.quick_form(form, novalidate=True, button_map={'submit':'primary'}) }}
-    <div class="text-center mb-5 mt-4">
-      <a href="{{url_for('home')}}" class="btn btn-primary">Cancelar</a>
-    </div>
 </div>
 {% endblock %}

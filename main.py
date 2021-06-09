@@ -37,16 +37,15 @@ class Person(db.Model):
 db.create_all()
 
 
+ROWS_PER_PAGE = 30
 
 @app.route("/")
 def home():
+    # Set the pagination configuration https://betterprogramming.pub/simple-flask-pagination-example-4190b12c2e2e
+    page = request.args.get('page', 1, type=int)
     # READ ALL PEOPLE:
-    all_people = Person.query.order_by(Person.nombre).all()
-    # #This line loops through all the people
-    # for i in range(len(all_people)):
-    #     #This line gives each movie a new ranking reversed from their order in all_movies
-    #     all_people[i].ranking = len(all_people) - i
-    # # db.session.commit()
+    # all_people = Person.query.order_by(Person.nombre).all()
+    all_people = Person.query.order_by(Person.nombre).paginate(page=page, per_page=ROWS_PER_PAGE)
     return render_template("index.html", people=all_people)
 
 
