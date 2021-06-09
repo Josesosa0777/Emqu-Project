@@ -1,0 +1,44 @@
+{% extends 'bootstrap/base.html' %}
+
+{% include "header.html" %}
+
+{% block styles %}
+  {{ super() }}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito+Sans:300,400,700">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,700">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+{% endblock %}
+
+{% block title %}Edit Person{% endblock %}
+
+{% block content %}
+<div class="container padding-form">
+    <h1 class="heading">Edit Person</h1>
+    <form action="" method="post" class="form" role="form">
+    <div class="col-md-6">
+        <label for="nombre">Nombre(s)</label>
+        {{ form.nombre(class_="form-control", size=40, value=person.nombre) }}
+    </div>
+    <div class="col-md-6">
+        <label for="apellido">Apellido(s)</label>
+        {{ form.apellido(class_="form-control", size=40, value=person.apellido) }}
+    </div>
+    <div class="col-md-6">
+        <label for="nacionalidad">Nacionalidad</label>
+        {{ form.nacionalidad(class_="form-control", size=40, value=person.nacionalidad) }}
+    </div>
+    <div class="col-md-6">
+        <label for="fecha_contrato">Fecha de Contrato</label>
+        {{ form.fecha_contrato(class_="form-control", value=fecha_previa) }}
+    </div>
+
+    <div class="col-md-6">
+        <label for="sexo">Sexo</label>
+        {{ form.sexo(class_="form-control custom-select mr-sm-2", value=person.sexo) }}
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+{% endblock %}
