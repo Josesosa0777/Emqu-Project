@@ -16,6 +16,23 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
+    <div class="row">
+      <div class="col-8">
+        <strong> Search for: {{tag}} </strong>
+      </div>
+      <div class="col-4">
+        <form action="" method="POST" autocomplete="off">
+          <div class="row">
+            <div class="col-6">
+              <input type="text" class="form-control" name="tag" id="tag" placeholder="Enter keyword">
+            </div>
+            <div class="col-6" align="left">
+              <input type="submit" value="Search" class="form-control btn btn-primary" name="">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <form class="text-center" action="/uploader" method="POST" enctype="multipart/form-data">
       <div class="col-auto mt-5 p-0">
@@ -63,6 +80,33 @@
       </table>
     </div>
 
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {% if people.has_prev %}
+          <li class="page-item"><a class="page-link" href="{{url_for("home", page=people.prev_num)}}">Previous</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link btn disabled" href="#">Previous</a></li>
+        {% endif %}
+
+        {% for page in people.iter_pages(left_edge=3, right_edge=3) %}
+          {% if page %}
+            {% if page==people.page %}
+              <li class="page-item active"><a class="page-link" href="{{url_for("home", page=page)}}">{{page}}</a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="{{url_for("home", page=page)}}">{{page}}</a></li>
+            {% endif %}
+          {% else %}
+            <li class="page-item disabled" id="example_ellipsis"><a class="page-link" href="#">...</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if people.has_next %}
+          <li class="page-item"><a class="page-link" href="{{url_for("home", page=people.next_num)}}">Next</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link btn disabled" href="#">Next</a></li>
+        {% endif %}
+      </ul>
+    </nav>
 
     <!-- Pagination Links-->
     <div class="text-right">

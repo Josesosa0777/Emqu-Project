@@ -36,15 +36,23 @@ class Person(db.Model):
 db.create_all()
 
 
-ROWS_PER_PAGE = 30
+ROWS_PER_PAGE = 2
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
     # Set the pagination configuration https://betterprogramming.pub/simple-flask-pagination-example-4190b12c2e2e
     page = request.args.get('page', 1, type=int)
     # READ ALL PEOPLE:
     # all_people = Person.query.order_by(Person.nombre).all()
     all_people = Person.query.order_by(Person.nombre).paginate(page=page, per_page=ROWS_PER_PAGE)
+    # SEARCHING
+    if request.method == "POST" and "tag" in request.form:
+        tag = request.form["tag"]
+        # all_people = Person.query.filter(Person.nombre==tag).paginate(per_page=ROWS_PER_PAGE, error_out=False)
+        # all_people = Person.query.filter(Person.nombre.like(search)).paginate(per_page=ROWS_PER_PAGE, error_out=False)
+        all_people = Person.query.filter(Person.nombre.like(f'%{tag}%')).paginate(per_page=ROWS_PER_PAGE, error_out=False)
+
+        return render_template("index.html", people=all_people, tag=tag)
     return render_template("index.html", people=all_people)
 
 
