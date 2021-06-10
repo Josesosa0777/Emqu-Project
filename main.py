@@ -36,7 +36,7 @@ class Person(db.Model):
 db.create_all()
 
 
-ROWS_PER_PAGE = 2
+ROWS_PER_PAGE = 30
 
 @app.route("/", methods=["GET", "POST"])
 def home():
@@ -49,9 +49,8 @@ def home():
     if request.method == "POST" and "tag" in request.form:
         tag = request.form["tag"]
         # all_people = Person.query.filter(Person.nombre==tag).paginate(per_page=ROWS_PER_PAGE, error_out=False)
-        # all_people = Person.query.filter(Person.nombre.like(search)).paginate(per_page=ROWS_PER_PAGE, error_out=False)
+        # https://stackoverflow.com/questions/3325467/sqlalchemy-equivalent-to-sql-like-statement
         all_people = Person.query.filter(Person.nombre.like(f'%{tag}%')).paginate(per_page=ROWS_PER_PAGE, error_out=False)
-
         return render_template("index.html", people=all_people, tag=tag)
     return render_template("index.html", people=all_people)
 
@@ -135,44 +134,47 @@ def uploader():
     if request.method == "POST":
         f = request.files['archivo']
         filename = secure_filename(f.filename)
-        f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        # file_path= f"folder/.xlsx"
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        print(file_path)
-        # dfs = pd.read_excel(file_path)
-        # print(dfs.head(5))
-        wb2 = load_workbook(file_path)
-        print(wb2.sheetnames)
-        ws = wb2.active
-        # https://openpyxl.readthedocs.io/en/stable/tutorial.html
-        # for row in ws.iter_rows(min_row=1, max_col=5, max_row=14, values_only=True):
-        #     print(row)
-        new_data = []
-        count = 0
         agregados = False
-        for row in ws.values:
-            list_row = list(row)    # convert tuple to list
-            count += 1
-            if list_row[0] == None:
-                break
-            if count != 1:
-                if list_row[3] != None:
-                    date_str = (str(list_row[3]).split(" ")) # to get as ['2018-11-15', '00:00:00']
-                    fecha = date_str[0].split("-")
-                    list_row[3] = fecha[1] + "/" + fecha[2] + "/" + fecha[0] # rename the row 3
-                new_data.append(list_row)
-            new_person = Person(
-            nombre = list_row[0].title(),
-            apellido = list_row[1].title(),
-            nacionalidad = list_row[2].title(),
-            fecha_contrato = list_row[3],
-            sexo = list_row[4]
-            )
-            db.session.add(new_person)
-            db.session.commit()
-            agregados = True
-        if agregados:
-            flash('Datos agregados exitosamente')
+        if filename:
+            f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # file_path= f"folder/.xlsx"
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            print(file_path)
+            # dfs = pd.read_excel(file_path)
+            # print(dfs.head(5))
+            wb2 = load_workbook(file_path)
+            print(wb2.sheetnames)
+            ws = wb2.active
+            # https://openpyxl.readthedocs.io/en/stable/tutorial.html
+            # for row in ws.iter_rows(min_row=1, max_col=5, max_row=14, values_only=True):
+            #     print(row)
+            new_data = []
+            count = 0
+            for row in ws.values:
+                list_row = list(row)    # convert tuple to list
+                count += 1
+                if list_row[0] == None:
+                    break
+                if count != 1:
+                    if list_row[3] != None:
+                        date_str = (str(list_row[3]).split(" ")) # to get as ['2018-11-15', '00:00:00']
+                        fecha = date_str[0].split("-")
+                        list_row[3] = fecha[1] + "/" + fecha[2] + "/" + fecha[0] # rename the row 3
+                    new_data.append(list_row)
+                new_person = Person(
+                nombre = list_row[0].title(),
+                apellido = list_row[1].title(),
+                nacionalidad = list_row[2].title(),
+                fecha_contrato = list_row[3],
+                sexo = list_row[4]
+                )
+                db.session.add(new_person)
+                db.session.commit()
+                agregados = True
+            if agregados:
+                flash('Datos agregados exitosamente')
+        if not agregados:
+            flash('No se seleccionó ningún archivo')
         return redirect(url_for("home"))
 
 

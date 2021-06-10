@@ -3,11 +3,15 @@
 {% include "header.html" %}
 {% block content %}
 <div class="container mt-5">
-  <h3 class="text-center">A continuacion se presenta la base de datos de las personas que han ingresado</h3>
+  <h4 class="text-center mb-3">A continuación se presenta la base de datos de las personas que han ingresado</h4>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         {% for message in messages %}
+        {% if message=="No se seleccionó ningún archivo" %}
+        <div class="col-md-3 p-2 ml-2 alert alert-danger alert-dismissible fade show" role="alert">
+        {% else %}
         <div class="col-md-3 p-2 ml-2 alert alert-success alert-dismissible fade show" role="alert">
+        {% endif %}
           <p>{{ message }}</p> 
           <button type="button" class="close p-0 pl-5 mr-2" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -17,16 +21,16 @@
       {% endif %}
     {% endwith %}
     <div class="row">
-      <div class="col-8">
-        <strong> Search for: {{tag}} </strong>
+      <div class="col-7">
+        <!-- <strong> Search for: {{tag}} </strong> -->
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <form action="" method="POST" autocomplete="off">
           <div class="row">
-            <div class="col-6">
-              <input type="text" class="form-control" name="tag" id="tag" placeholder="Enter keyword">
+            <div class="col-md-8 mt-1">
+              <input type="text" class="form-control" name="tag" id="tag" placeholder="Keyword for name">
             </div>
-            <div class="col-6" align="left">
+            <div class="col-md-4 mt-1" align="left">
               <input type="submit" value="Search" class="form-control btn btn-primary" name="">
             </div>
           </div>
@@ -35,7 +39,7 @@
     </div>
 
     <form class="text-center" action="/uploader" method="POST" enctype="multipart/form-data">
-      <div class="col-auto mt-5 p-0">
+      <div class="col-auto mt-4 p-0">
         <label for="formFileSm" class="form-label">Cargar datos desde archivo de Excel .xlsx</label>
       </div>
       <div class="col-12 d-flex justify-content-center flex-wrap">
@@ -43,7 +47,7 @@
         <input class="btn btn-secondary form-control-sm" id="formFileSm" type="file" name="archivo"><br>
       </div>
       <div class="pl-1 mb-0 mt-1">
-        <input class="btn btn-secondary align-items-center" type="submit" value="Enviar">
+        <input class="btn btn-secondary align-items-center" type="submit" value="Cargar a base de datos">
       </div>
       </div>
     </form>
@@ -80,34 +84,6 @@
       </table>
     </div>
 
-    <nav aria-label="Page navigation example">
-      <ul class="pagination">
-        {% if people.has_prev %}
-          <li class="page-item"><a class="page-link" href="{{url_for("home", page=people.prev_num)}}">Previous</a></li>
-        {% else %}
-          <li class="page-item"><a class="page-link btn disabled" href="#">Previous</a></li>
-        {% endif %}
-
-        {% for page in people.iter_pages(left_edge=3, right_edge=3) %}
-          {% if page %}
-            {% if page==people.page %}
-              <li class="page-item active"><a class="page-link" href="{{url_for("home", page=page)}}">{{page}}</a></li>
-            {% else %}
-              <li class="page-item"><a class="page-link" href="{{url_for("home", page=page)}}">{{page}}</a></li>
-            {% endif %}
-          {% else %}
-            <li class="page-item disabled" id="example_ellipsis"><a class="page-link" href="#">...</a></li>
-          {% endif %}
-        {% endfor %}
-
-        {% if people.has_next %}
-          <li class="page-item"><a class="page-link" href="{{url_for("home", page=people.next_num)}}">Next</a></li>
-        {% else %}
-          <li class="page-item"><a class="page-link btn disabled" href="#">Next</a></li>
-        {% endif %}
-      </ul>
-    </nav>
-
     <!-- Pagination Links-->
     <div class="text-right">
         <a href="{{ url_for('home', page=people.prev_num) }}"
@@ -143,6 +119,36 @@
     <p class="text-right mt-3">
       Showing page {{ people.page }} of {{ people.pages }}
     </p>
+
+    {% if false %}
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {% if people.has_prev %}
+          <li class="page-item"><a class="page-link" href="{{url_for("home", page=people.prev_num)}}">Previous</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link btn disabled" href="#">Previous</a></li>
+        {% endif %}
+
+        {% for page in people.iter_pages(left_edge=3, right_edge=3) %}
+          {% if page %}
+            {% if page==people.page %}
+              <li class="page-item active"><a class="page-link" href="{{url_for("home", page=page)}}">{{page}}</a></li>
+            {% else %}
+              <li class="page-item"><a class="page-link" href="{{url_for("home", page=page)}}">{{page}}</a></li>
+            {% endif %}
+          {% else %}
+            <li class="page-item disabled" id="example_ellipsis"><a class="page-link" href="#">...</a></li>
+          {% endif %}
+        {% endfor %}
+
+        {% if people.has_next %}
+          <li class="page-item"><a class="page-link" href="{{url_for("home", page=people.next_num)}}">Next</a></li>
+        {% else %}
+          <li class="page-item"><a class="page-link btn disabled" href="#">Next</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
 
 </div>
 
