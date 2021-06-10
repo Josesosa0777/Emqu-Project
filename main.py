@@ -12,7 +12,7 @@ from openpyxl import load_workbook
 from datetime import date
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get("APP_CONFIG_SECRET_KEY")
+app.config['SECRET_KEY'] = os.environ.get("SECRET_KEY")
 app.config['UPLOAD_FOLDER'] = "./Archivos Excel"
 Bootstrap(app)
 
