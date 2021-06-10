@@ -161,16 +161,16 @@ def uploader():
                         fecha = date_str[0].split("-")
                         list_row[3] = fecha[1] + "/" + fecha[2] + "/" + fecha[0] # rename the row 3
                     new_data.append(list_row)
-                new_person = Person(
-                nombre = list_row[0].title(),
-                apellido = list_row[1].title(),
-                nacionalidad = list_row[2].title(),
-                fecha_contrato = list_row[3],
-                sexo = list_row[4]
-                )
-                db.session.add(new_person)
-                db.session.commit()
-                agregados = True
+                    new_person = Person(
+                    nombre = list_row[0].title(),
+                    apellido = list_row[1].title(),
+                    nacionalidad = list_row[2].title(),
+                    fecha_contrato = list_row[3],
+                    sexo = list_row[4]
+                    )
+                    db.session.add(new_person)
+                    db.session.commit()
+                    agregados = True
             if agregados:
                 flash('Datos agregados exitosamente')
         if not agregados:
